@@ -9,8 +9,9 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
   if(!empty($username) && !empty($userpassword) && !empty($mail) && !is_numeric($username))
   {
   $user_id = random_num(20);
-  $query="INSERT INTO users(userid,username,userpassword,email) values('$user_id','$username','$userpassword','$mail')";
-  mysqli_query($con,$query);
+  $stmt=$con->prepare("INSERT INTO users(userid,username,userpassword,email) values(?,?,?,?)");
+  $stmt->bind_param("ssss",$user_id,$username,$userpassword,$mail);
+  $stmt->execute();
   header("Location:login.php");
   die;
   }
