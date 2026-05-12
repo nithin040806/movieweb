@@ -11,8 +11,10 @@ if($_SERVER['REQUEST_METHOD'] == "POST")
 		{
 
 			//read from database
-			$query = "SELECT * from users where username = '$user_name' limit 1";
-			$result = mysqli_query($con, $query);
+			$stmt = $con->prepare("SELECT * from users where username = ? limit 1");
+			$stmt->bind_param("s", $user_name);
+			$stmt->execute();
+			$result = $stmt->get_result();
 
 			if($result)
 			{
