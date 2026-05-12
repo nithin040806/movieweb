@@ -409,14 +409,16 @@ body.dark .home .text{
         </div>
     <?php 
     if(isset($_POST['moviename'])):
-        $movname=$_POST['moviename'];
-        $sql="SELECT postercardurl,pageurl from movies where title LIKE '%$movname%'";
-        $result=mysqli_query($con,$sql);
+        $movname=trim($_POST['moviename']);
+        $stmt=$con->prepare("SELECT postercardurl,pageurl from movies where title LIKE CONCAT('%', ?, '%')");
+        $stmt->bind_param("s",$movname);
+        $stmt->execute();
+        $result=$stmt->get_result();
     if($result):
     ?>
     <div class="movie">
     <div class="movies-title">
-        <h1>Results for "<?=$_POST['moviename']?>"</h1>
+        <h1>Results for "<?=htmlspecialchars($_POST['moviename'], ENT_QUOTES, 'UTF-8')?>"</h1>
     </div>
     <div class="movies-part">
         <?php 
