@@ -5,8 +5,9 @@ include("function.php");
 $user_data=check_login($con);
 $a=$user_data['userid'];
 $movieid=$_SESSION['movieid'];
-$sql="DELETE from watchlist where userid=$a AND movieid=$movieid";
-mysqli_query($con,$sql);
+$stmt=$con->prepare("DELETE from watchlist where userid=? AND movieid=?");
+$stmt->bind_param("ss",$a,$movieid);
+$stmt->execute();
 $a=$_SESSION['pageurl'];
 header("Location:$a");
 ?>
